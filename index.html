@@ -9,45 +9,44 @@
 body {
   margin: 0;
   font-family: "Segoe UI", "Noto Sans JP", sans-serif;
-  background-color: #f0f0f0;
 }
 
-/* 天気ヘッダー */
+/* 背景 */
 .weather-header {
   height: 260px;
   background-image:
-    linear-gradient(rgba(255,255,255,0.3), rgba(0,0,0,0.4)),
+    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
     url("https://images.unsplash.com/photo-1501630834273-4b5604d2ee31");
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
-/* ガラス風パネル */
-.weather-card {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(8px);
-  border-radius: 20px;
-  padding: 30px 50px;
-  text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  color: #333;
+/* 文字共通 */
+.weather-text {
+  color: #fff;
+  line-height: 1.4;
+  text-shadow:
+    2px 2px 0 #000,
+   -2px 2px 0 #000,
+    2px -2px 0 #000,
+   -2px -2px 0 #000;
 }
 
 /* 日付 */
 .weather-date {
   font-size: 18px;
   margin-bottom: 10px;
-  letter-spacing: 1px;
 }
 
 /* 天気 */
 .weather-main {
-  font-size: 32px;
+  font-size: 34px;
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 /* 気温 */
@@ -55,17 +54,13 @@ body {
   font-size: 20px;
 }
 
-.weather-temp span {
-  margin: 0 10px;
-}
-
 /* スマホ */
 @media (max-width: 600px) {
-  .weather-card {
-    padding: 25px 30px;
-  }
   .weather-main {
     font-size: 26px;
+  }
+  .weather-temp {
+    font-size: 18px;
   }
 }
 </style>
@@ -73,14 +68,13 @@ body {
 
 <body>
 
-<!-- 天気表示 -->
 <div class="weather-header">
-  <div class="weather-card">
+  <div class="weather-text">
     <div class="weather-date">2026年1月18日（日）</div>
     <div class="weather-main">☁ 曇り</div>
     <div class="weather-temp">
-      <span>最高 12℃</span>
-      <span>最低 5℃</span>
+      最高 12℃<br>
+      最低 5℃
     </div>
   </div>
 </div>
