@@ -1,120 +1,102 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>サンプルHTMLサイト</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>選択画面</title>
 
-    body {
-      background: #f5f5f5;
-      color: #333;
-      line-height: 1.6;
-    }
+<style>
+/* 全体 */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #000;
+  color: #fff;
+}
 
-    header {
-      background: #222;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
+/* 上部ヘッダー（景色風） */
+.header {
+  height: 220px;
+  background-image:
+    linear-gradient(
+      rgba(0,0,0,0.4),
+      rgba(0,0,0,0.7)
+    ),
+    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    nav a {
-      color: #fff;
-      margin: 0 10px;
-      text-decoration: none;
-      font-weight: bold;
-    }
+.header h1 {
+  font-size: 36px;
+  letter-spacing: 4px;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 10px;
+}
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+/* ボタンエリア */
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
 
-    .container {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
+/* グリッド（横3 × 縦2） */
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
 
-    .card {
-      background: #fff;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
+/* ボタン */
+.select-btn {
+  height: 100px;
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      background: #0078ff;
-      color: #fff;
-      cursor: pointer;
-      font-size: 16px;
-    }
+/* ホバー時 */
+.select-btn:hover {
+  background-color: #000;
+  color: #fff;
+  border-color: #fff;
+}
 
-    button:hover {
-      background: #005fd1;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #ddd;
-      margin-top: 40px;
-    }
-  </style>
+/* スマホ対応 */
+@media (max-width: 600px) {
+  .button-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <header>
-    <h1>My HTML Site</h1>
-    <p>はじめてのHTMLサイト</p>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#service">Service</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+<!-- 上部 -->
+<div class="header">
+  <h1>選択画面</h1>
+</div>
 
-  <main class="container">
-    <section id="about" class="card">
-      <h2>About</h2>
-      <p>このサイトはHTML・CSS・JavaScriptだけで作られています。</p>
-    </section>
-
-    <section id="service" class="card">
-      <h2>Service</h2>
-      <ul>
-        <li>Web制作</li>
-        <li>デザイン</li>
-        <li>プログラミング</li>
-      </ul>
-    </section>
-
-    <section id="contact" class="card">
-      <h2>Contact</h2>
-      <p>ボタンを押すとメッセージが表示されます。</p>
-      <button onclick="hello()">クリック</button>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2026 My Site</p>
-  </footer>
-
-  <script>
-    function hello() {
-      alert("こんにちは！HTMLサイトへようこそ 👋");
-    }
-  </script>
+<!-- ボタン -->
+<div class="container">
+  <div class="button-grid">
+    <button class="select-btn">ボタン 1</button>
+    <button class="select-btn">ボタン 2</button>
+    <button class="select-btn">ボタン 3</button>
+    <button class="select-btn">ボタン 4</button>
+    <button class="select-btn">ボタン 5</button>
+    <button class="select-btn">ボタン 6</button>
+  </div>
+</div>
 
 </body>
-</html>a
+</html>
