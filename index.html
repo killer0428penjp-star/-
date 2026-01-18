@@ -13,9 +13,9 @@ body {
 
 /* 背景（高さを画面の4分の3） */
 .weather-header {
-  height: 20vh;
+  height: 75vh;
+  position: relative;
   background-image:
-    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.55)),
     url("https://images.unsplash.com/photo-1501630834273-4b5604d2ee31");
   background-size: cover;
   background-position: center;
@@ -23,10 +23,23 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow: hidden;
+}
+
+/* 背景オーバーレイ（色を変えられる） */
+.overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.3); /* 初期黒半透明 */
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* 文字共通（縁取り） */
 .weather-text {
+  position: relative; /* overlayの上に表示 */
+  z-index: 2;
   color: #fff;
   line-height: 1.5;
   text-shadow:
@@ -55,7 +68,7 @@ body {
   font-size: 42px;
 }
 
-/* スマホ */
+/* スマホ対応 */
 @media (max-width: 600px) {
   .weather-main,
   .weather-temp {
@@ -65,29 +78,59 @@ body {
     font-size: 16px;
   }
 }
+
+/* スライダー配置 */
+.slider-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  background: rgba(255,255,255,0.2);
+  padding: 6px 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-container label {
+  font-size: 14px;
+  color: #fff;
+}
+input[type="range"] {
+  width: 100px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="weather-header">
+  <!-- 背景オーバーレイ -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- 天気文字 -->
   <div class="weather-text">
     <div class="weather-date" id="date"></div>
-
     <div class="weather-main" id="weather"></div>
-
     <div class="weather-temp" id="temp"></div>
+  </div>
+
+  <!-- スライダー -->
+  <div class="slider-container">
+    <label for="bgSlider">背景色</label>
+    <input type="range" id="bgSlider" min="0" max="100" value="30">
   </div>
 </div>
 
 <script>
-const API_KEY = "YOUR_API_KEY"; // ← 自分のAPIキー
-const CITY = "Tokyo";
+const API_KEY = "YOUR_API_KEY"; // ←自分のAPIキー
+const CITY = "Tokyo,jp";
 
+// 天気API取得
 fetch(`https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=metric&lang=ja`)
   .then(res => res.json())
   .then(data => {
-    // 日付（自動）
     const today = new Date();
     document.getElementById("date").textContent =
       today.toLocaleDateString("ja-JP", {
@@ -97,17 +140,30 @@ fetch(`https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY
         weekday: "long"
       });
 
-    // 天気
     document.getElementById("weather").textContent =
       data.weather[0].description;
 
-    // 温度
-    document.getElementById("temp").innerHTML =
+    document.getElementById("temp").textContent =
       `${Math.round(data.main.temp)}℃`;
   })
-  .catch(() => {
+  .catch(err => {
     document.getElementById("weather").textContent = "天気取得失敗";
+    console.error(err);
   });
+
+// 背景色スライダー制御
+const overlay = document.getElementById("overlay");
+const slider = document.getElementById("bgSlider");
+
+// スライダー値に応じて黒(0)→白(100)に変化
+slider.addEventListener("input", () => {
+  const val = slider.value;
+  // val 0→100 を rgba に変換
+  const alpha = 0.3; // 透過度固定
+  const r = val; // 0→100 の明度
+  const color = `rgba(${r},${r},${r},${alpha})`;
+  overlay.style.backgroundColor = color;
+});
 </script>
 
 </body>
