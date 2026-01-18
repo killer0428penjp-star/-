@@ -6,22 +6,18 @@
 <title>選択画面</title>
 
 <style>
-/* 全体 */
 body {
   margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background-color: #000;
+  font-family: "Segoe UI", "Noto Sans JP", sans-serif;
+  background-color: #0b0b0b;
   color: #fff;
 }
 
-/* 上部ヘッダー（景色風） */
+/* ヘッダー */
 .header {
-  height: 220px;
+  height: 230px;
   background-image:
-    linear-gradient(
-      rgba(0,0,0,0.4),
-      rgba(0,0,0,0.7)
-    ),
+    linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.75)),
     url("https://images.unsplash.com/photo-1501785888041-af3ef285b470");
   background-size: cover;
   background-position: center;
@@ -31,47 +27,84 @@ body {
 }
 
 .header h1 {
-  font-size: 36px;
-  letter-spacing: 4px;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 10px;
+  font-size: 38px;
+  letter-spacing: 6px;
+  padding: 12px 28px;
+  border: 1px solid rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.35);
+  border-radius: 10px;
 }
 
-/* ボタンエリア */
+/* メイン */
 .container {
-  max-width: 900px;
-  margin: 40px auto;
+  max-width: 960px;
+  margin: 50px auto;
   padding: 0 20px;
 }
 
-/* グリッド（横3 × 縦2） */
+/* グリッド */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 28px;
 }
 
-/* ボタン */
+/* おしゃれボタン */
 .select-btn {
-  height: 100px;
-  background-color: #fff;
-  color: #000;
-  border: 2px solid #000;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* ホバー時 */
-.select-btn:hover {
-  background-color: #000;
+  position: relative;
+  height: 120px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.15),
+      rgba(255,255,255,0.02)
+    );
+  backdrop-filter: blur(10px);
   color: #fff;
-  border-color: #fff;
+  font-size: 20px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.4),
+    inset 0 0 0 rgba(255,255,255,0);
+  transition: all 0.35s ease;
 }
 
-/* スマホ対応 */
-@media (max-width: 600px) {
+/* 下のライン */
+.select-btn::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  height: 2px;
+  background: rgba(255,255,255,0.4);
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+
+/* ホバー */
+.select-btn:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(255,255,255,0.4);
+}
+
+.select-btn:hover::after {
+  transform: scaleX(1);
+}
+
+/* 押したとき */
+.select-btn:active {
+  transform: translateY(-2px);
+}
+
+/* スマホ */
+@media (max-width: 700px) {
   .button-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -81,20 +114,18 @@ body {
 
 <body>
 
-<!-- 上部 -->
 <div class="header">
   <h1>選択画面</h1>
 </div>
 
-<!-- ボタン -->
 <div class="container">
   <div class="button-grid">
-    <button class="select-btn">ボタン 1</button>
-    <button class="select-btn">ボタン 2</button>
-    <button class="select-btn">ボタン 3</button>
-    <button class="select-btn">ボタン 4</button>
-    <button class="select-btn">ボタン 5</button>
-    <button class="select-btn">ボタン 6</button>
+    <button class="select-btn">OPTION 1</button>
+    <button class="select-btn">OPTION 2</button>
+    <button class="select-btn">OPTION 3</button>
+    <button class="select-btn">OPTION 4</button>
+    <button class="select-btn">OPTION 5</button>
+    <button class="select-btn">OPTION 6</button>
   </div>
 </div>
 
