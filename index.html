@@ -11,10 +11,11 @@ body {
   font-family: "Segoe UI", "Noto Sans JP", sans-serif;
 }
 
+/* 背景（高さを画面の4分の3） */
 .weather-header {
-  height: 260px;
+  height: 75vh;
   background-image:
-    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)),
+    linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.55)),
     url("https://images.unsplash.com/photo-1501630834273-4b5604d2ee31");
   background-size: cover;
   background-position: center;
@@ -24,27 +25,45 @@ body {
   text-align: center;
 }
 
+/* 文字共通（縁取り） */
 .weather-text {
   color: #fff;
+  line-height: 1.5;
   text-shadow:
-    2px 2px 0 #000,
-   -2px 2px 0 #000,
-    2px -2px 0 #000,
-   -2px -2px 0 #000;
+    3px 3px 0 #000,
+   -3px 3px 0 #000,
+    3px -3px 0 #000,
+   -3px -3px 0 #000;
 }
 
+/* 日付（小さめ） */
 .weather-date {
-  font-size: 18px;
-}
-
-.weather-main {
-  font-size: 34px;
-  font-weight: bold;
-  margin: 8px 0;
-}
-
-.weather-temp {
   font-size: 20px;
+  margin-bottom: 14px;
+  opacity: 0.9;
+}
+
+/* 天気 */
+.weather-main {
+  font-size: 42px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* 気温（天気と同じ大きさ） */
+.weather-temp {
+  font-size: 42px;
+}
+
+/* スマホ */
+@media (max-width: 600px) {
+  .weather-main,
+  .weather-temp {
+    font-size: 30px;
+  }
+  .weather-date {
+    font-size: 16px;
+  }
 }
 </style>
 </head>
@@ -54,34 +73,40 @@ body {
 <div class="weather-header">
   <div class="weather-text">
     <div class="weather-date" id="date"></div>
+
     <div class="weather-main" id="weather"></div>
+
     <div class="weather-temp" id="temp"></div>
   </div>
 </div>
 
 <script>
-const API_KEY = "YOUR_API_KEY"; // ←ここを変更
-const CITY = "Tokyo";          // 都市名（Tokyo, Osakaなど）
+const API_KEY = "YOUR_API_KEY"; // ← 自分のAPIキー
+const CITY = "Tokyo";
 
 fetch(`https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=metric&lang=ja`)
   .then(res => res.json())
   .then(data => {
-    // 日付
+    // 日付（自動）
     const today = new Date();
     document.getElementById("date").textContent =
-      today.toLocaleDateString("ja-JP", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
+      today.toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "long"
+      });
 
     // 天気
     document.getElementById("weather").textContent =
       data.weather[0].description;
 
-    // 気温
+    // 温度
     document.getElementById("temp").innerHTML =
-      `気温 ${Math.round(data.main.temp)}℃<br>
-       体感 ${Math.round(data.main.feels_like)}℃`;
+      `${Math.round(data.main.temp)}℃`;
   })
   .catch(() => {
-    document.getElementById("weather").textContent = "天気情報を取得できません";
+    document.getElementById("weather").textContent = "天気取得失敗";
   });
 </script>
 
