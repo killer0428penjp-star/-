@@ -2,126 +2,200 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>今日の天気</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", "Noto Sans JP", sans-serif;
-}
-
-.weather-header {
-  height: 75vh;
-  position: relative;
-  background-image: url("https://images.unsplash.com/photo-1501630834273-4b5604d2ee31");
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  overflow: hidden;
-}
-
-/* 背景オーバーレイ（時間帯で変化） */
-.overlay {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.3); /* 初期値 */
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* 文字 */
-.weather-text {
-  position: relative;
-  z-index: 2;
-  color: #fff;
-  line-height: 1.5;
-  text-shadow:
-    3px 3px 0 #000,
-   -3px 3px 0 #000,
-    3px -3px 0 #000,
-   -3px -3px 0 #000;
-}
-
-.weather-date {
-  font-size: 20px;
-  margin-bottom: 14px;
-  opacity: 0.9;
-}
-
-.weather-main {
-  font-size: 42px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.weather-temp {
-  font-size: 42px;
-}
-
-@media (max-width: 600px) {
-  .weather-main,
-  .weather-temp { font-size: 30px; }
-  .weather-date { font-size: 16px; }
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cyber Clock & Weather & Neo Pod</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&family=Montserrat:wght@400;700&family=Inter:wght@400;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="weather-header">
-  <div class="overlay" id="overlay"></div>
-  <div class="weather-text">
-    <div class="weather-date" id="date"></div>
-    <div class="weather-main" id="weather"></div>
-    <div class="weather-temp" id="temp"></div>
+  <header id="neo-fixed-header" style="display: none;">
+    <div class="header-left" id="header-profile-trigger">
+      <img id="my-profile-btn-fixed" src="">
+      <div id="my-name-display-fixed"></div>
+    </div>
+    <div class="header-right">
+      <button class="btn-sub" onclick="window.np_logout()">ログアウト</button>
+    </div>
+  </header>
+
+  <div class="switch-container">
+    <label class="switch"><input type="checkbox" id="modeToggle"><span class="slider"></span></label>
   </div>
-</div>
 
-<script>
-const API_KEY = "YOUR_API_KEY"; // 自分のAPIキー
-const CITY = "Tokyo,jp";
+  <div class="top-space" id="header-bg">
+    <div class="weather-top">
+      <span>天気 <span id="weather-text">--</span></span>
+      <span>温度 <span id="temp">--</span>℃ <span id="temp-diff" class="diff-badge"></span></span>
+      <span>湿度 <span id="humidity">--</span>% <span id="hum-diff" class="diff-badge"></span></span>
+    </div>
+    <div class="clock-main" id="clock">--:--:<span class="seconds">--</span></div>
+  </div>
 
-// 天気取得
-fetch(`https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=metric&lang=ja`)
-  .then(res => res.json())
-  .then(data => {
-    const today = new Date();
-    document.getElementById("date").textContent =
-      today.toLocaleDateString("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        weekday: "long"
-      });
+  <div id="today-memo-top-header" class="today-bar">
+    <div class="today-bar-content">
+      <span class="today-label">TODAY:</span>
+      <span class="today-bar-text"></span>
+      <button type="button" class="today-more-btn">もっと見る</button>
+    </div>
+  </div>
 
-    document.getElementById("weather").textContent = data.weather[0].description;
-    document.getElementById("temp").textContent = `${Math.round(data.main.temp)}℃`;
+  <div class="tag-container">
+    <span class="tag active" id="news-tag" data-target="news">news</span>
+    <span class="tag" data-target="study">study</span>
+    <span class="tag" id="tolk-tag" data-target="tolk">tolk</span>
+    <span class="tag" id="calendar-tag" data-target="calendar">calendar</span>
+    <span class="tag" data-target="others">others</span>
+  </div>
 
-    // 背景オーバーレイの明るさを時間帯で決定
-    const overlay = document.getElementById("overlay");
-    const hour = today.getHours();
-    let alpha = 0.3; // デフォルト明るさ
+  <div id="news-feed-container">
+    <div class="news-tabs">
+      <div id="tab-latest" class="n-tab active" onclick="window.changeNewsTab('latest')">Latest</div>
+      <div id="tab-popular" class="n-tab" onclick="window.changeNewsTab('popular')">Trending</div>
+      <div id="tab-likes" class="n-tab" onclick="window.changeNewsTab('likes')">Bookmark</div>
+    </div>
+    <div id="feed"><div style="text-align:center; padding:40px;">INITIALIZING...</div></div>
+  </div>
 
-    if (hour >= 5 && hour < 15) {
-      alpha = 0.1; // 明るい
-    } else if (hour >= 15 && hour < 18) {
-      alpha = 0.25; // 中くらい
-    } else {
-      alpha = 0.5; // 暗め
-    }
+  <div id="calendar-container">
+    <div class="calendar">
+      <div id="today-memo-top" class="cal-memo-top">今日の予定: なし</div>
+      <div class="cal-header">
+        <button id="prev">←</button>
+        <div id="cal-title"></div>
+        <button id="next">→</button>
+      </div>
+      <div class="week" id="weekdays">
+        <div data-dow="0">日</div><div data-dow="1">月</div><div data-dow="2">火</div>
+        <div data-dow="3">水</div><div data-dow="4">木</div><div data-dow="5">金</div><div data-dow="6">土</div>
+      </div>
+      <div class="days" id="days"></div>
+      <div class="memo">
+        <h3 id="memo-date">日付を選択</h3>
+        <textarea id="memo-text" placeholder="メモを書く" spellcheck="false"></textarea>
+        <div id="status-msg"></div>
+        <div><label><input type="checkbox" id="repeat-checkbox"> 繰り返し3か月</label></div>
+        <div>
+          <button class="action-btn save-btn" id="save-btn">保存</button>
+          <button class="action-btn important-btn" id="important-btn">大事な保存</button>
+          <button class="action-btn delete-btn" id="delete-btn">削除</button>
+          <button class="action-btn delete-all-btn" id="delete-all-btn">全削除</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    overlay.style.backgroundColor = `rgba(0,0,0,${alpha})`;
-  })
-  .catch(err => {
-    document.getElementById("weather").textContent = "天気取得失敗";
-    console.error(err);
-  });
-</script>
+  <div id="tolk-screen" class="screen">
+    <div id="auth-screen" class="auth-overlay">
+      <div class="auth-card">
+        <h2>Neo Pod Pro</h2>
+        <div id="acc-history-area" class="hidden">
+          <div id="acc-history-list"></div><hr>
+        </div>
+        <div id="auth-err"></div>
+        <input type="text" id="auth-id" class="input-field" placeholder="ID">
+        <input type="password" id="auth-pw" class="input-field" placeholder="パスワード">
+        <div id="signup-extra" class="hidden"><input type="text" id="signup-name" class="input-field" placeholder="表示名"></div>
+        <button id="login-btn" class="send-btn">ログイン</button>
+        <button id="toggle-signup">新規登録</button>
+        <button id="signup-exec-btn" class="send-btn hidden">登録完了</button>
+      </div>
+    </div>
 
+    <div id="main-content" class="hidden">
+      <header>
+        <div class="header-left">
+          <img id="my-profile-btn" src="">
+          <div id="my-name-display"></div>
+        </div>
+        <div>
+          <button class="btn-sub" onclick="window.np_logout()">ログアウト</button>
+          <button class="btn-sub btn-del" onclick="window.execDeleteAccount()">削除</button>
+        </div>
+      </header>
+      <div id="nav-area" class="nav-tabs">
+        <div id="tab-rooms" class="tab active" onclick="window.showNeoScreen('rooms')">トーク</div>
+        <div id="tab-friends" class="tab" onclick="window.showNeoScreen('friends')">友達</div>
+      </div>
+      <div id="rooms-screen" class="screen">
+        <div class="room-header">
+          <span>トークルーム</span>
+          <button onclick="window.openRoomModal()" class="btn-new-room">+ 新規作成</button>
+        </div>
+        <table class="data-table"><tbody id="room-list-body"></tbody></table>
+      </div>
+      <div id="friends-screen" class="screen hidden">
+        <table class="data-table"><tbody id="friend-list-body"></tbody></table>
+      </div>
+      <div id="chat-screen" class="screen hidden">
+        <div class="chat-header">
+          <button onclick="window.showNeoScreen('rooms')">← 戻る</button>
+          <b id="chat-title">ルーム名</b>
+        </div>
+        <div id="chat-area"></div>
+        <footer>
+          <div class="emoji-tray">
+            <span onclick="window.sendEmoji('👋','wave')">👋</span>
+            <span onclick="window.sendEmoji('💖','bounce')">💖</span>
+            <span onclick="window.sendEmoji('✨','bounce')">✨</span>
+            <span onclick="window.sendEmoji('🔥','bounce')">🔥</span>
+          </div>
+          <div class="input-box">
+            <button onclick="document.getElementById('m-file').click()">＋</button>
+            <input type="file" id="m-file" hidden accept="image/*,video/*">
+            <textarea id="m-text" placeholder="メッセージを入力..."></textarea>
+            <button id="send-go" class="send-btn">送信</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <div id="profile-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <h3>プロフィール編集</h3>
+        <input type="file" id="profile-file-input" hidden accept="image/*">
+        <div onclick="document.getElementById('profile-file-input').click()" class="profile-preview-box">
+           <img id="profile-edit-preview" src="">
+        </div>
+        <h3 id="edit-profile-name-container"><span id="edit-profile-name"></span></h3>
+        <input type="date" id="edit-birthday" class="input-field">
+        <textarea id="edit-bio" class="input-field" placeholder="自己紹介"></textarea>
+        <div class="modal-btns">
+          <button onclick="window.closeModal('profile-modal')">戻る</button>
+          <button id="profile-save-btn">保存</button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="room-modal" class="modal-overlay hidden">
+       <div class="modal-card">
+         <h3>ルーム作成</h3>
+         <input type="file" id="room-file-input" hidden>
+         <div onclick="document.getElementById('room-file-input').click()" class="room-preview-box">
+           <img id="room-preview" src="https://placehold.jp/150x150.png?text=IMG">
+         </div>
+         <input type="text" id="room-name-input" class="input-field" placeholder="ルーム名">
+         <div id="room-invite-list"></div>
+         <div class="modal-btns">
+           <button onclick="window.closeModal('room-modal')">戻る</button>
+           <button id="room-save-btn">保存</button>
+         </div>
+       </div>
+    </div>
+
+    <div id="view-profile-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="profile-view-icon"><img id="view-profile-icon" src=""></div>
+        <h3><span id="view-profile-name"></span> <span id="view-profile-id"></span></h3>
+        <div class="profile-details">
+          <div>誕生日: <span id="view-profile-birthday"></span></div>
+          <div><pre id="view-profile-bio"></pre></div>
+        </div>
+        <button onclick="window.closeModal('view-profile-modal')">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
