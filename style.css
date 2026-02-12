@@ -1,0 +1,9 @@
+/* style.css */
+/* 元のCSSをすべてここに貼り付け */
+
+/* 追加: HTML内のstyle属性をクラス化したもの */
+.header-left { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+#neo-fixed-header { position: fixed; top: 15px; right: 15px; z-index: 10000; display: flex; align-items: center; gap: 10px; }
+#my-profile-btn-fixed { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.hidden { display: none !important; }
+/* ...その他必要なスタイル... */
